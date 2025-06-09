@@ -1,0 +1,3771 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="ServeFlow - Sistema profesional de punto de venta para gestión de inventario, ventas y análisis" />
+  <title>ServeFlow | Sistema de Punto de Venta</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
+  <style>
+    /* --- DISEÑO GLOBAL PROFESIONAL Y MODERNO --- */
+    :root {
+      /* Paleta de colores principal */
+      --primary: #2563eb;
+      --secondary: #1d4ed8;
+      --success: #22c55e;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --info: #3b82f6;
+      
+      /* Colores de estado */
+      --status-online: #22c55e;
+      --status-offline: #ef4444;
+      --status-warning: #f59e0b;
+      --status-info: #3b82f6;
+      
+      /* Escala de grises */
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      
+      /* Sombras */
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+      --shadow-xl: 0 20px 25px rgba(0,0,0,0.15);
+      
+      /* Bordes */
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+      
+      /* Espaciado */
+      --spacing-xs: 0.25rem;
+      --spacing-sm: 0.5rem;
+      --spacing-md: 1rem;
+      --spacing-lg: 1.5rem;
+      --spacing-xl: 2rem;
+      --spacing-2xl: 3rem;
+      
+      /* Transiciones */
+      --transition-fast: 150ms ease;
+      --transition-normal: 250ms ease;
+      --transition-slow: 350ms ease;
+      
+      /* Z-index */
+      --z-dropdown: 1000;
+      --z-sticky: 1020;
+      --z-fixed: 1030;
+      --z-modal-backdrop: 1040;
+      --z-modal: 1050;
+      --z-popover: 1060;
+      --z-tooltip: 1070;
+    }
+
+    body {
+      font-family: 'Nunito Sans', 'Segoe UI', Arial, sans-serif;
+      background: var(--gray-100);
+      color: var(--gray-800);
+      margin: 0;
+      min-height: 100vh;
+    }
+    .main-content {
+      padding: 2.5rem 1.5rem 2rem 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .card {
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+      padding: 2rem 1.5rem;
+      transition: box-shadow var(--transition);
+    }
+    .card:hover {
+      box-shadow: 0 12px 40px rgba(37,99,235,0.10);
+    }
+    .btn, .btn-danger, .btn-primary, .btn-success {
+      border: none;
+      border-radius: 8px;
+      padding: 0.7em 1.5em;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background var(--transition), box-shadow var(--transition), color var(--transition);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      margin: 0.2em;
+    }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-success { background: var(--success); color: #fff; }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn:disabled { background: var(--gray-300); color: var(--gray-500); cursor: not-allowed; }
+    .btn:hover, .btn:focus { filter: brightness(1.08); box-shadow: 0 4px 16px rgba(0,0,0,0.10); }
+    input, select, textarea {
+      border: 1.5px solid var(--gray-300);
+      border-radius: 8px;
+      padding: 0.7em 1em;
+      font-size: 1rem;
+      margin-bottom: 1em;
+      width: 100%;
+      transition: border var(--transition), box-shadow var(--transition);
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px var(--primary)22;
+      outline: none;
+    }
+    label {
+      font-weight: 600;
+      color: var(--gray-700);
+      margin-bottom: 0.3em;
+      display: block;
+    }
+    /* --- MODAL GLOBAL --- */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.2s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .modal-content {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      padding: 2rem 1.5rem;
+      min-width: 320px;
+      max-width: 95vw;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    }
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--gray-200);
+      margin-bottom: 1.2rem;
+    }
+    .modal-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--gray-500);
+      cursor: pointer;
+      transition: color var(--transition);
+    }
+    .modal-close:hover { color: var(--danger); }
+    @media (max-width: 700px) {
+      .main-content { padding: 1rem 0.2rem; }
+      .card { padding: 1rem 0.5rem; }
+      .modal-content { padding: 1rem 0.5rem; }
+    }
+
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+    }
+
+    body {
+      font-family: 'Nunito Sans', sans-serif;
+      background: var(--gray-100);
+      color: var(--gray-800);
+      line-height: 1.6;
+      min-height: 100vh;
+      transition: background-color var(--transition-normal);
+    }
+
+    /* Layout */
+    .app-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0; 
+      left: 0;
+      width: 280px;
+      height: 100vh;
+      background: var(--gray-900);
+      padding: var(--spacing-xl) var(--spacing-lg);
+      color: white;
+      box-shadow: var(--shadow-lg);
+      z-index: var(--z-fixed);
+      transition: all var(--transition-normal);
+    }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: var(--spacing-xl);
+      padding-bottom: var(--spacing-md);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .sidebar-header i {
+      color: #fff !important;
+      margin: 0;
+      padding: 0;
+    }
+
+    .sidebar-header h2 {
+      color: #fff !important;
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin: 0;
+      letter-spacing: 1px;
+    }
+
+    @media (max-width: 700px) {
+      .sidebar-header {
+        gap: 10px;
+        padding-bottom: 8px;
+      }
+      .sidebar-header h2 {
+        font-size: 1.2rem;
+      }
+      .sidebar-header i {
+        font-size: 1.3rem !important;
+      }
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-sm);
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      padding: var(--spacing-md);
+      color: var(--gray-300);
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      transition: all var(--transition-fast);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 0;
+      background: var(--secondary);
+      opacity: 0.1;
+      transition: width var(--transition-fast);
+    }
+
+    .nav-item:hover::before,
+    .nav-item.active::before {
+      width: 100%;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      color: white;
+      transform: translateX(4px);
+    }
+
+    .nav-item i {
+      font-size: 1.25rem;
+      width: 24px;
+      text-align: center;
+      transition: transform var(--transition-fast);
+    }
+
+    .nav-item:hover i {
+      transform: scale(1.1);
+    }
+
+    .main-content {
+      flex: 1;
+      margin-left: 280px;
+      padding: var(--spacing-xl);
+      padding-top: calc(64px + var(--spacing-xl)); /* Ajuste para el header fijo */
+      transition: all var(--transition-normal);
+    }
+
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 280px;
+      right: 0;
+      height: 64px;
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--spacing-xl);
+      z-index: var(--z-sticky);
+      transition: all var(--transition-normal);
+    }
+
+    .topbar-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+    }
+
+    /* Cards y Contenedores */
+    .card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-xl);
+      margin-bottom: var(--spacing-xl);
+      box-shadow: var(--shadow-md);
+      transition: all var(--transition-normal);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(to right, var(--secondary), var(--info));
+      opacity: 0;
+      transition: opacity var(--transition-normal);
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-lg);
+      padding-bottom: var(--spacing-md);
+      border-bottom: 2px solid var(--gray-200);
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--gray-800);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+
+    .card-title i {
+      color: var(--secondary);
+    }
+
+    /* Formularios */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs);
+    }
+
+    .form-label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--gray-700);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+    }
+
+    .form-label i {
+      color: var(--secondary);
+      font-size: 0.75rem;
+    }
+
+    input, select {
+      width: 100%;
+      padding: var(--spacing-md);
+      font-size: 0.95rem;
+      border: 1px solid var(--gray-300);
+      border-radius: var(--radius-md);
+      background: var(--gray-50);
+      transition: all var(--transition-fast);
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--secondary);
+      box-shadow: 0 0 0 3px rgba(0,122,255,0.1);
+      background: white;
+    }
+
+    /* Botones */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-md) var(--spacing-lg);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: white;
+      background: var(--secondary);
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.6s ease, height 0.6s ease;
+    }
+
+    .btn:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary { background: var(--secondary); }
+    .btn-success { background: var(--success); }
+    .btn-danger { background: var(--danger); }
+    .btn-warning { background: var(--warning); }
+    .btn-info { background: var(--info); }
+
+    /* Tablas */
+    .table-container {
+      overflow-x: auto;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      background: white;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+
+    th {
+      background: var(--gray-100);
+      color: var(--gray-700);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      padding: var(--spacing-md);
+      text-align: left;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    td {
+      padding: var(--spacing-md);
+      border-bottom: 1px solid var(--gray-200);
+      color: var(--gray-700);
+      transition: background-color var(--transition-fast);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: var(--gray-50);
+    }
+
+    /* Alertas y Mensajes */
+    .alert {
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--spacing-md);
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(-10px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .alert-success {
+      background: #d1fae5;
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+    }
+
+    .alert-error {
+      background: #fee2e2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+    }
+
+    .alert-warning {
+      background: #fef3c7;
+      border: 1px solid #fde68a;
+      color: #92400e;
+    }
+
+    .alert-info {
+      background: #dbeafe;
+      border: 1px solid #bfdbfe;
+      color: #1e40af;
+    }
+
+    /* Gráficos */
+    .chart-container {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      margin-bottom: var(--spacing-xl);
+      box-shadow: var(--shadow-md);
+      transition: all var(--transition-normal);
+      height: 400px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chart-container:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .chart-header {
+      margin-bottom: var(--spacing-md);
+      padding-bottom: var(--spacing-sm);
+      border-bottom: 2px solid var(--gray-200);
+    }
+
+    .chart-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--gray-800);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+
+    .chart-title i {
+      color: var(--secondary);
+      font-size: 1.5rem;
+    }
+
+    .chart-content {
+      flex: 1;
+      position: relative;
+      min-height: 300px;
+      margin-top: var(--spacing-md);
+    }
+
+    .chart-container canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    /* Encuestas */
+    .survey-container {
+      display: flex;
+      justify-content: center;
+      gap: var(--spacing-md);
+      margin: var(--spacing-lg) 0;
+      flex-wrap: wrap;
+    }
+
+    .survey-btn {
+      flex: 1;
+      min-width: 200px;
+      max-width: 250px;
+      padding: var(--spacing-md);
+      font-size: 1rem;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(135deg, var(--secondary), #0055cc);
+      border: none;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-sm);
+    }
+
+    .survey-btn i {
+      font-size: 1.2rem;
+    }
+
+    /* Alertas */
+    .alert-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: var(--z-tooltip);
+      max-width: 300px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .sidebar {
+        width: 240px;
+      }
+      
+      .main-content {
+        margin-left: 240px;
+      }
+      
+      .topbar {
+        left: 240px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      
+      .sidebar.active {
+        transform: translateX(0);
+      }
+      
+      .main-content {
+        margin-left: 0;
+      }
+      
+      .topbar {
+        left: 0;
+      }
+      
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .survey-container {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .survey-btn {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+
+    /* Utilidades */
+    .oculto {
+      display: none !important;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .text-right {
+      text-align: right;
+    }
+
+    .mt-1 { margin-top: var(--spacing-xs); }
+    .mt-2 { margin-top: var(--spacing-sm); }
+    .mt-3 { margin-top: var(--spacing-md); }
+    .mt-4 { margin-top: var(--spacing-lg); }
+    .mt-5 { margin-top: var(--spacing-xl); }
+
+    .mb-1 { margin-bottom: var(--spacing-xs); }
+    .mb-2 { margin-bottom: var(--spacing-sm); }
+    .mb-3 { margin-bottom: var(--spacing-md); }
+    .mb-4 { margin-bottom: var(--spacing-lg); }
+    .mb-5 { margin-bottom: var(--spacing-xl); }
+
+    /* Animaciones */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.3s ease;
+    }
+
+    .slide-up {
+      animation: slideUp 0.3s ease;
+    }
+
+    /* Estilos adicionales para mejor UX */
+    .empty-state {
+      text-align: center;
+      padding: var(--spacing-xl);
+      color: var(--gray-500);
+    }
+
+    .empty-state i {
+      margin-bottom: var(--spacing-md);
+      color: var(--gray-400);
+    }
+
+    .producto-info {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+    }
+
+    .producto-imagen {
+      font-size: 1.5rem;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gray-100);
+      border-radius: var(--radius-md);
+    }
+
+    .badge {
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .badge-category {
+      background: var(--gray-100);
+      color: var(--gray-700);
+    }
+
+    .badge-pago {
+      background: var(--secondary);
+      color: white;
+    }
+
+    .stock-badge {
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .stock-bajo {
+      background: var(--danger);
+      color: white;
+    }
+
+    .cantidad-badge {
+      background: var(--gray-100);
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+    }
+
+    .cliente-info {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+
+    .cliente-info i {
+      color: var(--secondary);
+    }
+
+    .venta-detalle {
+      margin-top: var(--spacing-sm);
+      font-size: 0.875rem;
+    }
+
+    .venta-detalle p {
+      margin: var(--spacing-xs) 0;
+    }
+
+    .counter {
+      background: white;
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+    }
+
+    .counter-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--secondary);
+    }
+
+    .counter-label {
+      font-size: 0.875rem;
+      color: var(--gray-600);
+      margin-top: var(--spacing-xs);
+    }
+
+    .counter-sub {
+      font-size: 0.75rem;
+      color: var(--gray-500);
+      margin-top: var(--spacing-xs);
+    }
+
+    .counter-warning {
+      font-size: 0.75rem;
+      color: var(--danger);
+      margin-top: var(--spacing-xs);
+    }
+
+    .tooltip {
+      position: fixed;
+      background: var(--gray-800);
+      color: white;
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      z-index: var(--z-tooltip);
+      pointer-events: none;
+      animation: fadeIn 0.2s ease;
+    }
+
+    /* Mejoras en la sección de reportes */
+    .reportes-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--spacing-xl);
+      margin-top: var(--spacing-lg);
+      padding: var(--spacing-md);
+    }
+
+    @media (max-width: 1400px) {
+      .reportes-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .chart-container {
+        height: 450px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .chart-container {
+        height: 400px;
+        padding: var(--spacing-md);
+      }
+
+      .chart-content {
+        min-height: 250px;
+      }
+    }
+
+    /* Mejoras en el diseño responsivo */
+    @media (max-width: 1400px) {
+        .reportes-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .chart-container {
+            height: 450px;
+        }
+
+        .sidebar {
+            width: 240px;
+        }
+
+        .main-content {
+            margin-left: 240px;
+    }
+
+    .topbar {
+            left: 240px;
+        }
+    }
+
+    @media (max-width: 1200px) {
+        .form-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .card {
+            padding: var(--spacing-lg);
+        }
+    }
+
+    @media (max-width: 992px) {
+    .sidebar {
+            transform: translateX(-100%);
+            z-index: var(--z-modal);
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .main-content {
+            margin-left: 0;
+            padding: var(--spacing-lg);
+    }
+
+    .topbar {
+            left: 0;
+            padding: 0 var(--spacing-lg);
+        }
+
+        .mobile-menu-btn {
+            display: block;
+        }
+
+        table {
+            min-width: 800px;
+        }
+    }
+
+    @media (max-width: 768px) {
+    .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .card {
+            padding: var(--spacing-md);
+        }
+
+        .chart-container {
+            height: 400px;
+            padding: var(--spacing-md);
+        }
+
+        .chart-content {
+            min-height: 250px;
+        }
+
+        .survey-container {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .survey-btn {
+            width: 100%;
+            max-width: none;
+        }
+
+        .alert {
+            width: 100%;
+            max-width: none;
+        }
+
+        .topbar-title {
+            font-size: 1.1rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .main-content {
+            padding: var(--spacing-md);
+        }
+
+        .topbar {
+            padding: 0 var(--spacing-md);
+        }
+
+    .card {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .chart-container {
+            height: 350px;
+        }
+
+        .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .nav-item {
+            padding: var(--spacing-sm);
+        }
+
+        .nav-item i {
+            font-size: 1.1rem;
+        }
+
+        .form-label {
+            font-size: 0.9rem;
+        }
+
+        input, select {
+            font-size: 0.9rem;
+            padding: var(--spacing-sm);
+        }
+    }
+
+    /* Botón de menú móvil */
+    .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        color: var(--gray-700);
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: var(--spacing-sm);
+        margin-right: var(--spacing-md);
+    }
+
+    /* Overlay para el menú móvil */
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: var(--z-modal-backdrop);
+        opacity: 0;
+        transition: opacity var(--transition-normal);
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+        opacity: 1;
+    }
+
+    /* Ajustes para dispositivos táctiles */
+    @media (hover: none) {
+        .btn:hover::before {
+            display: none;
+        }
+
+        .nav-item:hover::before {
+            display: none;
+        }
+
+        .card:hover {
+            transform: none;
+        }
+
+        .chart-container:hover {
+            transform: none;
+        }
+    }
+
+    /* Mejoras en la accesibilidad táctil */
+    @media (pointer: coarse) {
+        .btn,
+        .nav-item,
+        .survey-btn {
+            min-height: 44px;
+        }
+
+        input,
+        select {
+            min-height: 44px;
+        }
+
+        .table-container {
+            -webkit-overflow-scrolling: touch;
+        }
+    }
+
+    /* Ajustes para el contenedor de encuestas y gráfica */
+    .survey-chart-container {
+        margin-top: var(--spacing-xl);
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-xl);
+    }
+
+    .survey-chart-container .table-container {
+        margin-bottom: var(--spacing-xl);
+    }
+
+    .survey-chart-container .chart-container {
+        height: 400px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: var(--spacing-xl);
+    }
+
+    .survey-chart-container .chart-content {
+      width: 100%;
+        max-width: 600px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .survey-chart-container canvas {
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    /* Ajustes responsivos para la gráfica */
+    @media (max-width: 768px) {
+        .survey-chart-container .chart-container {
+            height: 350px;
+            padding: var(--spacing-lg);
+        }
+    }
+
+    @media (max-width: 576px) {
+        .survey-chart-container .chart-container {
+            height: 300px;
+            padding: var(--spacing-md);
+        }
+    }
+
+    /* Mejoras en la sección de encuestas */
+    .survey-section {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: var(--spacing-xl);
+      background: white;
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .survey-header {
+        text-align: center;
+        margin-bottom: var(--spacing-xl);
+        padding-bottom: var(--spacing-lg);
+        border-bottom: 2px solid var(--gray-100);
+    }
+
+    .survey-header h2 {
+        font-size: 2.5rem;
+        color: var(--gray-800);
+        margin-bottom: var(--spacing-sm);
+        font-weight: 700;
+    }
+
+    .survey-header p {
+        font-size: 1.2rem;
+        color: var(--gray-600);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .survey-container {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-xl);
+    }
+
+    .survey-rating {
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .survey-rating h3 {
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .rating-buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--spacing-md);
+      padding: 0;
+    }
+
+    @media (max-width: 700px) {
+      .rating-buttons {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .rating-btn {
+      padding: 8px 0;
+      font-size: 0.95rem;
+      gap: 2px;
+    }
+
+    .rating-btn i {
+      font-size: 1.2rem;
+    }
+
+    .rating-btn span {
+      font-size: 1rem;
+    }
+
+    .rating-btn.excelente {
+        background: linear-gradient(135deg, #34c759, #2e7d32);
+      color: white;
+    }
+
+    .rating-btn.buena {
+        background: linear-gradient(135deg, #007aff, #1565c0);
+        color: white;
+    }
+
+    .rating-btn.regular {
+        background: linear-gradient(135deg, #ff9500, #ef6c00);
+      color: white;
+    }
+
+    .rating-btn.deficiente {
+        background: linear-gradient(135deg, #ff3b30, #c62828);
+      color: white;
+    }
+
+    .survey-actions {
+        display: flex;
+        justify-content: center;
+        padding: var(--spacing-lg);
+        border-top: 2px solid var(--gray-100);
+    }
+
+    .survey-actions .btn-danger {
+        padding: var(--spacing-md) var(--spacing-xl);
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        background: linear-gradient(135deg, #ff3b30, #c62828);
+        border: none;
+        border-radius: var(--radius-lg);
+        color: white;
+        cursor: pointer;
+        transition: all var(--transition);
+    }
+
+    .survey-actions .btn-danger:hover {
+      transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .survey-actions .btn-danger i {
+        font-size: 1.2rem;
+    }
+
+    @media (max-width: 768px) {
+        .survey-section {
+            padding: var(--spacing-lg);
+        }
+
+        .survey-header h2 {
+            font-size: 2rem;
+        }
+
+        .survey-header p {
+            font-size: 1.1rem;
+        }
+
+        .rating-buttons {
+            grid-template-columns: 1fr;
+        }
+
+        .rating-btn {
+            padding: var(--spacing-lg);
+        }
+    }
+
+    @media (min-width: 900px) {
+      #formInv.form-grid, #formVenta.form-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: var(--spacing-md);
+        align-items: end;
+      }
+      #formInv .form-group, #formVenta .form-group {
+        margin-bottom: 0;
+      }
+      #formInv .form-group:last-child, #formVenta .form-group:last-child {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+      }
+      #formInv .btn, #formVenta .btn {
+        width: auto;
+        align-self: center;
+      }
+    }
+
+    // Agregar funcionalidad para el menú móvil
+    document.addEventListener('DOMContentLoaded', function() {
+        // Crear botón de menú móvil
+        const mobileMenuBtn = document.createElement('button');
+        mobileMenuBtn.className = 'mobile-menu-btn';
+        mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+        document.querySelector('.topbar').insertBefore(mobileMenuBtn, document.querySelector('.topbar-actions'));
+
+        // Crear overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'sidebar-overlay';
+        document.body.appendChild(overlay);
+
+        // Funcionalidad del menú móvil
+        mobileMenuBtn.addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.add('active');
+            overlay.classList.add('active');
+        });
+
+        overlay.addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // Cerrar menú al cambiar de sección en móvil
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                if (window.innerWidth <= 992) {
+                    document.querySelector('.sidebar').classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+
+        // Ajustar layout al cambiar tamaño de ventana
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 992) {
+                document.querySelector('.sidebar').classList.remove('active');
+                overlay.classList.remove('active');
+            }
+        });
+    });
+
+    // Función para renderizar la gráfica de encuestas
+    function renderGraficoEncuestas() {
+        const encuestas = utils.getLS('encuestas');
+        const ctx = document.getElementById('graficoEncuestas');
+        if (!ctx) return;
+        // Limpiar gráfica previa si existe
+        if (window.graficoEncuestasInstance) {
+            window.graficoEncuestasInstance.destroy();
+        }
+        // Contar opiniones
+        const conteo = { 'Excelente': 0, 'Buena': 0, 'Regular': 0, 'Deficiente': 0 };
+        if (encuestas && encuestas.length) {
+            encuestas.forEach(opinion => {
+                if (conteo.hasOwnProperty(opinion)) conteo[opinion]++;
+            });
+        }
+        // Si no hay encuestas, mostrar gráfica vacía
+        const dataValues = Object.values(conteo);
+        const hayDatos = dataValues.some(v => v > 0);
+        window.graficoEncuestasInstance = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(conteo),
+                datasets: [{
+                    data: dataValues,
+                    backgroundColor: [
+                        '#34c759', // Excelente
+                        '#007aff', // Buena
+                        '#ff9500', // Regular
+                        '#ff3b30'  // Deficiente
+                    ],
+                    borderWidth: 0,
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            font: {
+                                size: 14,
+                                weight: '600'
+                            }
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Distribución de Calificaciones',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        },
+                        padding: {
+                            top: 10,
+                            bottom: 20
+                        }
+                    },
+                    tooltip: {
+                        enabled: hayDatos // Solo mostrar tooltip si hay datos
+                    }
+                },
+                cutout: '65%',
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                }
+            }
+        });
+        // Actualizar estadísticas
+        actualizarEstadisticas();
+    }
+
+    // Función mejorada para guardar encuesta
+    function guardarEncuesta(opinion) {
+        let encuestas = utils.getLS('encuestas');
+        if (!Array.isArray(encuestas)) encuestas = [];
+        encuestas.push(opinion);
+        utils.setLS('encuestas', encuestas);
+        document.querySelector('.survey-thankyou').style.display = 'block';
+        renderGraficoEncuestas();
+        actualizarEstadisticas();
+        mostrarMensaje('Encuesta registrada exitosamente', 'success');
+        setTimeout(() => {
+            document.querySelector('.survey-thankyou').style.display = 'none';
+        }, 3000);
+    }
+
+    // Función para eliminar todas las encuestas
+    function eliminarEncuestas() {
+        if (!confirm('¿Está seguro de que desea eliminar todas las encuestas? Esta acción no se puede deshacer.')) {
+            return;
+        }
+
+        utils.setLS('encuestas', []);
+        renderGraficoEncuestas();
+        actualizarEstadisticas();
+        mostrarMensaje('Todas las encuestas han sido eliminadas', 'success');
+    }
+
+    // Actualizar la función inicializarSistema para que inicialice la gráfica
+    function inicializarSistema() {
+        // ... código existente ...
+        
+        // Inicializar gráfica de encuestas
+        renderGraficoEncuestas();
+        
+        // ... resto del código existente ...
+    }
+
+    .survey-results {
+      background: none;
+      border-radius: 0;
+      padding: 0 0 var(--spacing-xl) 0;
+      margin: 0 0 var(--spacing-xl) 0;
+    }
+
+    .survey-results h3 {
+      margin-top: 0;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .survey-results .chart-container {
+      padding: var(--spacing-sm);
+    }
+
+    /* --- MEJORAS VISUALES Y DE USABILIDAD PARA ENCUESTAS --- */
+    .survey-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: var(--spacing-md);
+    }
+    .survey-header .survey-icon {
+      font-size: 2.5rem;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+    .survey-header h2 {
+      font-size: 2rem;
+      color: var(--gray-800);
+      margin-bottom: 0.2rem;
+      font-weight: 700;
+    }
+    .survey-header p {
+      color: var(--gray-600);
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+    .rating-buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--spacing-md);
+      padding: 0;
+    }
+
+    @media (max-width: 700px) {
+      .rating-buttons {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .rating-btn {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 10px 0;
+      font-size: 1rem;
+      border: none;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: box-shadow 0.2s, transform 0.2s;
+      outline: none;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    .rating-btn:focus-visible {
+      box-shadow: 0 0 0 3px var(--secondary-color);
+      outline: 2px solid var(--secondary-color);
+      z-index: 2;
+    }
+    .rating-btn:focus, .rating-btn:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+      transform: translateY(-2px) scale(1.04);
+      z-index: 1;
+    }
+    .rating-btn[aria-label]:hover::after, .rating-btn[aria-label]:focus-visible::after {
+      content: attr(aria-label);
+      position: absolute;
+      bottom: 110%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #222;
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0.97;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    }
+    .rating-btn i {
+      font-size: 1.3rem;
+    }
+    .rating-btn span {
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+    .survey-separator {
+      border: none;
+      border-top: 2px solid;
+      border-image: linear-gradient(90deg, #e0e7ef 0%, #b6c6e3 50%, #e0e7ef 100%);
+      border-image-slice: 1;
+      margin: 18px 0 10px 0;
+    }
+    .survey-thankyou {
+      text-align: center;
+      padding: var(--spacing-md);
+      display: none;
+      animation: fadeIn 0.5s ease;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      z-index: 1000;
+      min-width: 300px;
+    }
+    .survey-thankyou i {
+      font-size: 2.5rem;
+      color: var(--success);
+      margin-bottom: var(--spacing-sm);
+    }
+    .survey-thankyou h3 {
+      font-size: 1.3rem;
+      color: var(--gray-800);
+      margin-bottom: var(--spacing-xs);
+    }
+    .survey-thankyou p {
+      color: var(--gray-600);
+      font-size: 1rem;
+    }
+    .survey-results {
+      margin-top: 0;
+      padding-top: 0;
+    }
+    .survey-results h3 {
+      margin-top: 0;
+      margin-bottom: var(--spacing-sm);
+      text-align: center;
+      font-size: 1.2rem;
+      color: var(--gray-700);
+      font-weight: 600;
+    }
+    .survey-results .chart-container {
+      padding: var(--spacing-sm);
+    }
+    .survey-results-desc {
+      text-align: center;
+      color: var(--gray-500);
+      font-size: 0.97rem;
+      margin-top: 8px;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      padding: 2rem;
+      min-width: 320px;
+      max-width: 95vw;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    /* Mejoras en la sección de encuestas */
+    .survey-section {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: var(--spacing-xl);
+      background: white;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      transition: transform 0.3s ease;
+    }
+
+    .survey-section:hover {
+      transform: translateY(-2px);
+    }
+
+    .survey-header {
+      text-align: center;
+      margin-bottom: var(--spacing-xl);
+      padding-bottom: var(--spacing-lg);
+      border-bottom: 2px solid var(--gray-100);
+    }
+
+    .survey-header .survey-icon {
+      font-size: 3rem;
+      color: var(--primary);
+      margin-bottom: var(--spacing-md);
+      display: inline-block;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    .survey-header h2 {
+      font-size: 2.5rem;
+      color: var(--gray-800);
+      margin-bottom: var(--spacing-sm);
+      font-weight: 700;
+    }
+
+    .survey-header p {
+      font-size: 1.2rem;
+      color: var(--gray-600);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .survey-instructions {
+      text-align: center;
+      color: var(--gray-700);
+      font-size: 1.1rem;
+      margin-bottom: var(--spacing-lg);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-sm);
+    }
+
+    .survey-instructions i {
+      color: var(--primary);
+    }
+
+    .rating-buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--spacing-md);
+      padding: 0;
+    }
+
+    .rating-btn {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-xs);
+      padding: var(--spacing-lg);
+      font-size: 1rem;
+      border: none;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      outline: none;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .rating-btn:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .rating-btn:active {
+      transform: translateY(-2px);
+    }
+
+    .rating-btn i {
+      font-size: 1.5rem;
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .rating-btn span {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .rating-btn small {
+      font-size: 0.85rem;
+      opacity: 0.9;
+    }
+
+    .rating-btn.excelente {
+      background: linear-gradient(135deg, #34c759, #2e7d32);
+      color: white;
+    }
+
+    .rating-btn.buena {
+      background: linear-gradient(135deg, #007aff, #1565c0);
+      color: white;
+    }
+
+    .rating-btn.regular {
+      background: linear-gradient(135deg, #ff9500, #ef6c00);
+      color: white;
+    }
+
+    .rating-btn.deficiente {
+      background: linear-gradient(135deg, #ff3b30, #c62828);
+      color: white;
+    }
+
+    .survey-comment {
+      margin: var(--spacing-xl) 0;
+      display: none;
+    }
+
+    .survey-comment textarea {
+      width: 100%;
+      padding: var(--spacing-md);
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      font-size: 1rem;
+      resize: vertical;
+      transition: all 0.3s ease;
+    }
+
+    .survey-comment textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      outline: none;
+    }
+
+    .char-count {
+      display: block;
+      text-align: right;
+      color: var(--gray-500);
+      font-size: 0.85rem;
+      margin-top: var(--spacing-xs);
+    }
+
+    .survey-thankyou {
+      text-align: center;
+      padding: var(--spacing-xl);
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .survey-thankyou i {
+      font-size: 3rem;
+      color: var(--success);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .survey-thankyou h3 {
+      font-size: 1.5rem;
+      color: var(--gray-800);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .survey-thankyou p {
+      color: var(--gray-600);
+      font-size: 1.1rem;
+    }
+
+    .survey-separator {
+      border: none;
+      border-top: 2px solid var(--gray-100);
+      margin: var(--spacing-xl) 0;
+    }
+
+    .survey-results {
+      text-align: center;
+    }
+
+    .survey-results h3 {
+      font-size: 1.5rem;
+      color: var(--gray-800);
+      margin-bottom: var(--spacing-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-sm);
+    }
+
+    .survey-results h3 i {
+      color: var(--primary);
+    }
+
+    .survey-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--spacing-lg);
+      margin: var(--spacing-lg) 0;
+    }
+
+    .stat-item {
+      background: var(--gray-50);
+      padding: var(--spacing-lg);
+      border-radius: var(--radius-lg);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .stat-item:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .stat-value {
+      display: block;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .stat-label {
+      color: var(--gray-600);
+      font-size: 0.9rem;
+    }
+
+    .survey-results-desc {
+      color: var(--gray-500);
+      font-size: 0.95rem;
+      margin-top: var(--spacing-md);
+    }
+
+    .survey-actions {
+      margin-top: var(--spacing-xl);
+      display: flex;
+      justify-content: center;
+    }
+
+    .survey-actions .btn-danger {
+      padding: var(--spacing-md) var(--spacing-xl);
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      background: linear-gradient(135deg, #ff3b30, #c62828);
+      border: none;
+      border-radius: var(--radius-lg);
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .survey-actions .btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .survey-actions .btn-danger i {
+      font-size: 1.2rem;
+    }
+
+    @media (max-width: 768px) {
+      .survey-section {
+        padding: var(--spacing-lg);
+      }
+
+      .survey-header h2 {
+        font-size: 2rem;
+      }
+
+      .survey-header p {
+        font-size: 1.1rem;
+      }
+
+      .rating-buttons {
+        grid-template-columns: 1fr;
+      }
+
+      .rating-btn {
+        padding: var(--spacing-lg);
+      }
+
+      .survey-stats {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-group.button-align-right {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 0;
+    }
+    /* Quitar margen inferior del último input/select antes del botón */
+    .form-group:not(.button-align-right) input:last-child,
+    .form-group:not(.button-align-right) select:last-child {
+      margin-bottom: 0;
+    }
+
+    @media (min-width: 900px) {
+      #formInv.form-grid, #formVenta.form-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: var(--spacing-md);
+        align-items: end;
+      }
+      #formInv .form-group, #formVenta .form-group {
+        margin-bottom: 0;
+      }
+      #formInv .form-group:last-child, #formVenta .form-group:last-child {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+      }
+      #formInv .btn, #formVenta .btn {
+        width: auto;
+        align-self: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header" style="display:flex;align-items:center;gap:16px;">
+        <i class="fas fa-store fa-2x" style="color:#fff;"></i>
+        <h2 style="font-size:1.6rem;font-weight:800;color:#fff;margin:0;letter-spacing:1px;">ServeFlow</h2>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item active" onclick="mostrarSeccion('inventario')">
+          <i class="fas fa-boxes-stacked"></i>
+          <span>Inventario</span>
+        </a>
+        <a href="#" class="nav-item" onclick="mostrarSeccion('ventas')">
+          <i class="fas fa-cash-register"></i>
+          <span>Ventas</span>
+        </a>
+        <a href="#" class="nav-item" onclick="mostrarSeccion('reportes')">
+          <i class="fas fa-chart-line"></i>
+          <span>Reportes</span>
+        </a>
+        <a href="#" class="nav-item" onclick="mostrarSeccion('encuestas')">
+          <i class="fas fa-clipboard-question"></i>
+          <span>Encuestas</span>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+  <header class="topbar">
+        <h1 class="topbar-title">ServeFlow - Sistema de Punto de Venta</h1>
+        <div class="topbar-actions">
+          <span class="topbar-user" style="font-size:1rem;color:#2563eb;"><i class="fas fa-user-circle"></i> Bienvenido/a</span>
+          <a href="#" class="topbar-help" style="font-size:1rem;color:#3b82f6;text-decoration:none;display:flex;align-items:center;gap:4px;" title="Ayuda / Soporte" onclick="mostrarModalAyuda(event)"><i class="fas fa-question-circle"></i> Ayuda</a>
+        </div>
+  </header>
+
+      <section id="inventario" class="card seccion fade-in">
+        <div class="card-header">
+          <h2 class="card-title">
+            <i class="fas fa-boxes-stacked"></i>
+            Gestión de Inventario
+          </h2>
+</div>
+
+    <form id="formInv" class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="nombreProd">
+              <i class="fas fa-tag"></i>
+              Nombre del Producto
+            </label>
+            <input type="text" id="nombreProd" placeholder="Ej: Café Americano" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="categoriaProd">
+              <i class="fas fa-layer-group"></i>
+              Categoría
+            </label>
+            <input type="text" id="categoriaProd" placeholder="Ej: Bebidas" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="precioProd">
+              <i class="fas fa-dollar-sign"></i>
+              Precio
+            </label>
+            <input type="number" id="precioProd" placeholder="Ej: 35.00" step="0.01" min="0" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="stockProd">
+              <i class="fas fa-box"></i>
+              Stock
+            </label>
+            <input type="number" id="stockProd" placeholder="Ej: 100" min="0" required>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save"></i> Guardar Producto
+            </button>
+          </div>
+    </form>
+
+        <div class="table-container">
+    <table>
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+      <tbody id="tablaInventario"></tbody>
+    </table>
+  </div>
+      </section>
+
+      <section id="ventas" class="card seccion oculto fade-in">
+        <div class="card-header">
+          <h2 class="card-title">
+            <i class="fas fa-cash-register"></i>
+            Registro de Venta
+          </h2>
+          <div>
+            <button class="btn btn-info" onclick="exportarVentasExcel()">
+              <i class="fas fa-file-excel"></i> Exportar Excel
+            </button>
+            <button class="btn btn-danger" onclick="exportarVentasPDF()">
+              <i class="fas fa-file-pdf"></i> Exportar PDF
+            </button>
+          </div>
+        </div>
+
+        <div id="alertaStock" class="alert oculto"></div>
+        
+    <form id="formVenta" class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="selectProducto">
+              <i class="fas fa-box"></i>
+              Producto
+            </label>
+            <select id="selectProducto" required></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cantVenta">
+              <i class="fas fa-sort-numeric-up"></i>
+              Cantidad
+            </label>
+            <input type="number" id="cantVenta" placeholder="Ej: 2" min="1" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cliente">
+              <i class="fas fa-user"></i>
+              Cliente
+            </label>
+            <input type="text" id="cliente" placeholder="Nombre del cliente" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="pago">
+              <i class="fas fa-credit-card"></i>
+              Método de Pago
+            </label>
+            <select id="pago" required>
+              <option value="Efectivo">Efectivo</option>
+              <option value="Tarjeta">Tarjeta</option>
+              <option value="Transferencia">Transferencia</option>
+      </select>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-success" style="min-width: 150px;">
+              <i class="fas fa-check"></i> Confirmar Venta
+            </button>
+          </div>
+    </form>
+
+    <div id="resumenVenta"></div>
+
+        <div class="card-header mt-4">
+          <h3 class="card-title">
+            <i class="fas fa-history"></i>
+            Historial de Ventas Recientes
+          </h3>
+  </div>
+
+        <div class="table-container">
+    <table id="tablaVentas">
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Método de Pago</th>
+          <th>Total</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody id="cuerpoVentas"></tbody>
+    </table>
+        </div>
+      </section>
+
+      <section id="reportes" class="card seccion oculto fade-in">
+        <div class="card-header">
+          <h2 class="card-title">
+            <i class="fas fa-chart-line"></i>
+            Reportes y Estadísticas
+          </h2>
+        </div>
+        
+        <div class="reportes-grid">
+          <div class="chart-container">
+            <div class="chart-header">
+              <h3 class="chart-title">
+                <i class="fas fa-chart-bar"></i>
+                Ventas por Producto
+              </h3>
+            </div>
+            <div class="chart-content">
+              <canvas id="graficoVentasPorProducto"></canvas>
+            </div>
+  </div>
+
+          <div class="chart-container">
+            <div class="chart-header">
+              <h3 class="chart-title">
+                <i class="fas fa-chart-pie"></i>
+                Métodos de Pago
+              </h3>
+            </div>
+            <div class="chart-content">
+              <canvas id="graficoMetodoPago"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-container">
+            <div class="chart-header">
+              <h3 class="chart-title">
+                <i class="fas fa-chart-line"></i>
+                Tendencia de Ventas
+              </h3>
+            </div>
+            <div class="chart-content">
+              <canvas id="graficoTendenciaVentas"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-container">
+            <div class="chart-header">
+              <h3 class="chart-title">
+                <i class="fas fa-chart-pie"></i>
+                Rendimiento por Categoría
+              </h3>
+            </div>
+            <div class="chart-content">
+              <canvas id="graficoCategorias"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="encuestas" class="card seccion oculto fade-in">
+        <div class="survey-section">
+          <div class="survey-header">
+            <span class="survey-icon"><i class="fas fa-poll-h"></i></span>
+            <h2>Encuesta de Satisfacción</h2>
+            <p>Tu opinión es anónima y nos ayuda a mejorar cada día.</p>
+          </div>
+          
+          <div class="survey-rating">
+            <div class="rating-buttons">
+              <button class="rating-btn excelente" onclick="guardarEncuesta('Excelente')" aria-label="Excelente: Servicio sobresaliente y sin fallas">
+                <i class="fas fa-star"></i>
+                <span>Excelente</span>
+                <small>Servicio sobresaliente</small>
+              </button>
+              <button class="rating-btn buena" onclick="guardarEncuesta('Buena')" aria-label="Buena: Servicio bueno, pero mejorable">
+                <i class="fas fa-thumbs-up"></i>
+                <span>Buena</span>
+                <small>Servicio bueno</small>
+              </button>
+              <button class="rating-btn regular" onclick="guardarEncuesta('Regular')" aria-label="Regular: Servicio aceptable, pero con detalles">
+                <i class="fas fa-face-meh"></i>
+                <span>Regular</span>
+                <small>Servicio aceptable</small>
+              </button>
+              <button class="rating-btn deficiente" onclick="guardarEncuesta('Deficiente')" aria-label="Deficiente: Servicio insatisfactorio o con problemas">
+                <i class="fas fa-thumbs-down"></i>
+                <span>Deficiente</span>
+                <small>Servicio insatisfactorio</small>
+              </button>
+            </div>
+          </div>
+
+          <div class="survey-thankyou" id="surveyThankYou">
+            <i class="fas fa-check-circle"></i>
+            <h3>¡Gracias por tu calificación!</h3>
+            <p>Tu opinión es muy valiosa para nosotros.</p>
+          </div>
+
+          <hr class="survey-separator" />
+
+          <div class="survey-results">
+            <h3><i class="fas fa-chart-pie"></i> Resultados de la Encuesta</h3>
+            <div class="chart-container">
+              <canvas id="graficoEncuestas"></canvas>
+            </div>
+            <div class="survey-stats">
+              <div class="stat-item">
+                <span class="stat-value" id="totalEncuestas">0</span>
+                <span class="stat-label">Total de encuestas</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value" id="promedioEncuestas">0%</span>
+                <span class="stat-label">Satisfacción promedio</span>
+              </div>
+            </div>
+            <div class="survey-results-desc">
+              Así opinan nuestros clientes en tiempo real.
+            </div>
+          </div>
+
+          <div class="survey-actions">
+            <button class="btn-danger" onclick="eliminarEncuestas()">
+              <i class="fas fa-trash"></i>
+              Eliminar Todas las Encuestas
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.7.0/jspdf.plugin.autotable.min.js"></script>
+<script>
+    // Funciones de utilidad mejoradas
+    const utils = {
+        getLS: (key) => {
+            try {
+                const data = localStorage.getItem(key);
+                return data ? JSON.parse(data) : [];
+            } catch (error) {
+                console.error(`Error al obtener datos de ${key}:`, error);
+                mostrarMensaje('Error al cargar los datos. Por favor, recargue la página.', 'error');
+                return [];
+            }
+        },
+
+        setLS: (key, val) => {
+            try {
+                localStorage.setItem(key, JSON.stringify(val));
+                return true;
+            } catch (error) {
+                console.error(`Error al guardar datos en ${key}:`, error);
+                mostrarMensaje('Error al guardar los datos. Por favor, intente nuevamente.', 'error');
+                return false;
+            }
+        },
+
+        formatCurrency: (amount) => {
+            return new Intl.NumberFormat('es-MX', {
+                style: 'currency',
+                currency: 'MXN'
+            }).format(amount);
+        },
+
+        formatDate: (date) => {
+            return new Intl.DateTimeFormat('es-MX', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            }).format(new Date(date));
+        },
+
+        sanitizeInput: (input) => {
+            if (typeof input !== 'string') return input;
+            return input.trim().replace(/[<>]/g, '');
+        }
+    };
+
+    // Validaciones mejoradas
+    const validaciones = {
+        numero: (valor, min = 0, max = Infinity) => {
+            const num = parseFloat(valor);
+            return !isNaN(num) && num >= min && num <= max && Number.isFinite(num);
+        },
+
+        texto: (valor, minLength = 1, maxLength = 100) => {
+            const texto = String(valor).trim();
+            return texto.length >= minLength && texto.length <= maxLength;
+        },
+
+        stock: (cantidad, stockDisponible) => {
+            return cantidad > 0 && cantidad <= stockDisponible;
+        }
+    };
+
+    // Sistema de mensajes mejorado
+    function mostrarMensaje(mensaje, tipo = 'info', duracion = 3000) {
+        // Eliminar alertas existentes
+        const alertasExistentes = document.querySelectorAll('.alert');
+        alertasExistentes.forEach(alerta => alerta.remove());
+        
+        const alerta = document.createElement('div');
+        alerta.className = `alert alert-${tipo} slide-up`;
+        alerta.innerHTML = `
+            <i class="fas ${getIconForAlert(tipo)}"></i>
+            <span>${mensaje}</span>
+        `;
+        
+        const contenedor = document.querySelector('.main-content');
+        contenedor.insertBefore(alerta, contenedor.firstChild);
+        
+        setTimeout(() => {
+            alerta.style.opacity = '0';
+            alerta.style.transform = 'translateY(-10px)';
+            setTimeout(() => alerta.remove(), 300);
+        }, duracion);
+    }
+
+    function getIconForAlert(tipo) {
+        switch(tipo) {
+            case 'success': return 'fa-check-circle';
+            case 'error': return 'fa-exclamation-circle';
+            case 'warning': return 'fa-exclamation-triangle';
+            default: return 'fa-info-circle';
+        }
+    }
+
+    // Inicialización del sistema
+    function inicializarSistema() {
+        console.log('Iniciando sistema...');
+        
+        // Inicializar productos si no existen
+        if (!localStorage.getItem('productos')) {
+            console.log('Inicializando productos...');
+            const productosIniciales = [
+                { 
+                    nombre: 'Café Americano', 
+                    categoria: 'Bebidas', 
+                    precio: 35, 
+                    stock: 100,
+                    descripcion: 'Café negro tradicional',
+                    imagen: '☕'
+                },
+                { 
+                    nombre: 'Café Latte', 
+                    categoria: 'Bebidas', 
+                    precio: 45, 
+                    stock: 100,
+                    descripcion: 'Café con leche cremosa',
+                    imagen: '🥛'
+                },
+                { 
+                    nombre: 'Croissant', 
+                    categoria: 'Panadería', 
+                    precio: 25, 
+                    stock: 50,
+                    descripcion: 'Panadería francesa tradicional',
+                    imagen: '🥐'
+                },
+                { 
+                    nombre: 'Sandwich', 
+                    categoria: 'Alimentos', 
+                    precio: 55, 
+                    stock: 30,
+                    descripcion: 'Sándwich gourmet',
+                    imagen: '🥪'
+                }
+            ];
+            utils.setLS('productos', productosIniciales);
+        }
+
+        // Inicializar ventas si no existen
+        if (!localStorage.getItem('ventas')) {
+            console.log('Inicializando ventas...');
+            utils.setLS('ventas', []);
+        }
+
+        // Inicializar encuestas si no existen
+        if (!localStorage.getItem('encuestas')) {
+            console.log('Inicializando encuestas...');
+            utils.setLS('encuestas', []);
+        }
+
+        // Renderizar interfaz inicial
+        console.log('Renderizando interfaz...');
+  renderInventario();
+  renderVentas();
+        renderSelect();
+        actualizarContadores();
+
+        // Inicializar gráfica de encuestas
+        renderGraficoEncuestas();
+    }
+
+    // Gestión de inventario
+function renderInventario() {
+        console.log('Renderizando inventario...');
+        const productos = utils.getLS('productos');
+        const tabla = document.getElementById('tablaInventario');
+        
+        if (!tabla) {
+            console.error('No se encontró el elemento tablaInventario');
+            return;
+        }
+        
+        if (!productos || !productos.length) {
+            tabla.innerHTML = `
+                <tr>
+                    <td colspan="5" class="text-center">
+                        <div class="empty-state">
+                            <i class="fas fa-box-open fa-3x mb-3"></i>
+                            <p>No hay productos en el inventario</p>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        tabla.innerHTML = productos.map((p, i) => `
+            <tr class="slide-up">
+                <td>
+                    <div class="producto-info">
+                        <span class="producto-imagen">${p.imagen}</span>
+                        <div>
+                            <strong>${p.nombre}</strong>
+                            <small class="text-muted d-block">${p.descripcion}</small>
+                        </div>
+                    </div>
+                </td>
+                <td><span class="badge badge-category">${p.categoria}</span></td>
+                <td>${utils.formatCurrency(p.precio)}</td>
+                <td>
+                    <span class="stock-badge ${p.stock < 10 ? 'stock-bajo' : ''}">
+                        ${p.stock} unidades
+                    </span>
+                </td>
+      <td class="actions">
+                    <button class="btn btn-sm btn-info" onclick="editarProducto(${i})" title="Editar">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger" onclick="eliminarProducto(${i})" title="Eliminar">
+                        <i class="fas fa-trash"></i>
+                    </button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+    // Manejo del formulario de inventario
+    document.getElementById('formInv').addEventListener('submit', function(e) {
+        e.preventDefault();
+        console.log('Procesando nuevo producto...');
+        
+        const nombre = document.getElementById('nombreProd').value;
+        const categoria = document.getElementById('categoriaProd').value;
+        const precio = document.getElementById('precioProd').value;
+        const stock = document.getElementById('stockProd').value;
+        const descripcion = document.getElementById('descripcionProd')?.value || '';
+
+        // Validaciones
+        if (!validaciones.texto(nombre, 3, 50)) {
+            mostrarMensaje('El nombre debe tener entre 3 y 50 caracteres', 'error');
+            return;
+        }
+        if (!validaciones.texto(categoria, 2, 30)) {
+            mostrarMensaje('La categoría debe tener entre 2 y 30 caracteres', 'error');
+            return;
+        }
+        if (!validaciones.numero(precio, 0.01, 99999.99)) {
+            mostrarMensaje('El precio debe ser un número válido entre $0.01 y $99,999.99', 'error');
+            return;
+        }
+        if (!validaciones.numero(stock, 0, 9999)) {
+            mostrarMensaje('El stock debe ser un número válido entre 0 y 9,999', 'error');
+            return;
+        }
+
+        const productos = utils.getLS('productos');
+        
+        // Verificar si el producto ya existe
+        if (productos.some(p => p.nombre.toLowerCase() === nombre.toLowerCase())) {
+            mostrarMensaje('Ya existe un producto con ese nombre', 'error');
+            return;
+        }
+
+        // Agregar nuevo producto
+        const nuevoProducto = {
+            nombre: utils.sanitizeInput(nombre),
+            categoria: utils.sanitizeInput(categoria),
+            precio: parseFloat(precio),
+            stock: parseInt(stock),
+            descripcion: utils.sanitizeInput(descripcion),
+            imagen: '📦' // Emoji por defecto
+        };
+
+        productos.push(nuevoProducto);
+        
+        if (utils.setLS('productos', productos)) {
+            this.reset();
+    renderInventario();
+            renderSelect();
+            mostrarMensaje('Producto agregado exitosamente', 'success');
+            actualizarContadores();
+        }
+    });
+
+    // Función para mostrar modal de agregar producto
+    function mostrarModalAgregarProducto() {
+        const form = document.getElementById('formInv');
+        form.reset();
+        form.onsubmit = null; // Restaurar comportamiento original
+        
+        // Hacer scroll al formulario
+        form.scrollIntoView({ behavior: 'smooth' });
+        mostrarMensaje('Complete el formulario para agregar un nuevo producto', 'info');
+    }
+
+    // Inicializar el sistema cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM cargado, inicializando sistema...');
+        
+        // Verificar compatibilidad del navegador
+        if (!window.localStorage) {
+            mostrarMensaje('Su navegador no soporta almacenamiento local. Algunas funciones pueden no estar disponibles.', 'warning');
+        }
+        
+        inicializarSistema();
+        
+        // Agregar event listeners para mejor interactividad
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // Agregar tooltips
+        document.querySelectorAll('[title]').forEach(element => {
+            element.addEventListener('mouseenter', function(e) {
+                const tooltip = document.createElement('div');
+                tooltip.className = 'tooltip';
+                tooltip.textContent = this.title;
+                document.body.appendChild(tooltip);
+                
+                const rect = this.getBoundingClientRect();
+                tooltip.style.top = rect.bottom + 5 + 'px';
+                tooltip.style.left = rect.left + (rect.width - tooltip.offsetWidth) / 2 + 'px';
+            });
+            
+            element.addEventListener('mouseleave', function() {
+                document.querySelectorAll('.tooltip').forEach(t => t.remove());
+            });
+        });
+
+        // Agregar validación en tiempo real para campos numéricos
+        document.querySelectorAll('input[type="number"]').forEach(input => {
+            input.addEventListener('input', function() {
+                if (this.value < 0) this.value = 0;
+                if (this.value > 9999) this.value = 9999;
+            });
+        });
+    });
+
+    // Sistema de ventas
+    function renderVentas() {
+        console.log('Renderizando ventas...');
+        const ventas = utils.getLS('ventas');
+        const cuerpo = document.getElementById('cuerpoVentas');
+        
+        if (!cuerpo) {
+            console.error('No se encontró el elemento cuerpoVentas');
+            return;
+        }
+        
+        if (!ventas || !ventas.length) {
+            cuerpo.innerHTML = `
+                <tr>
+                    <td colspan="6" class="text-center">
+                        <div class="empty-state">
+                            <i class="fas fa-receipt fa-3x mb-3"></i>
+                            <p>No hay ventas registradas</p>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        // Ordenar ventas por fecha (más recientes primero)
+        ventas.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+        
+        cuerpo.innerHTML = ventas.map((v, i) => `
+            <tr class="slide-up">
+                <td>
+                    <div class="cliente-info">
+                        <i class="fas fa-user"></i>
+                        <span>${v.cliente}</span>
+                    </div>
+                </td>
+                <td>${v.producto}</td>
+                <td>
+                    <span class="cantidad-badge">${v.cantidad}</span>
+                </td>
+                <td>
+                    <span class="badge badge-pago">
+                        <i class="fas ${getIconForPayment(v.pago)}"></i>
+                        ${v.pago}
+                    </span>
+                </td>
+                <td>${utils.formatCurrency(v.total)}</td>
+                <td>
+                    <button class="btn btn-sm btn-danger" onclick="eliminarVenta(${i})" title="Eliminar venta">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    function getIconForPayment(metodo) {
+        switch(metodo.toLowerCase()) {
+            case 'efectivo': return 'fa-money-bill';
+            case 'tarjeta': return 'fa-credit-card';
+            case 'transferencia': return 'fa-exchange-alt';
+            default: return 'fa-money-bill';
+        }
+    }
+
+    // Manejo del formulario de ventas
+    document.getElementById('formVenta').addEventListener('submit', function(e) {
+  e.preventDefault();
+        console.log('Procesando nueva venta...');
+
+  const selectProducto = document.getElementById('selectProducto');
+  const cantVenta = document.getElementById('cantVenta');
+  const cliente = document.getElementById('cliente');
+  const pago = document.getElementById('pago');
+
+  // Validaciones
+  const productos = utils.getLS('productos');
+  if (!productos || !productos.length) {
+    mostrarMensaje('No hay productos disponibles para vender.', 'error');
+    return;
+  }
+  if (selectProducto.value === '' || isNaN(selectProducto.value) || selectProducto.value < 0 || selectProducto.value >= productos.length) {
+    mostrarMensaje('Por favor seleccione un producto válido.', 'error');
+    return;
+  }
+  const i = parseInt(selectProducto.value);
+  if (productos[i].stock <= 0) {
+    mostrarMensaje('El producto seleccionado no tiene stock disponible.', 'error');
+    return;
+  }
+  if (!validaciones.numero(cantVenta.value, 1)) {
+    mostrarMensaje('Por favor ingrese una cantidad válida mayor a 0', 'error');
+    return;
+  }
+  if (!validaciones.texto(cliente.value, 2, 50)) {
+    mostrarMensaje('Por favor ingrese un nombre de cliente válido', 'error');
+    return;
+  }
+
+  const ventas = utils.getLS('ventas');
+  const cantidad = parseInt(cantVenta.value);
+
+  if (!validaciones.stock(cantidad, productos[i].stock)) {
+    mostrarMensaje(`Stock insuficiente. Solo hay ${productos[i].stock} unidades disponibles`, 'error');
+    return;
+  }
+
+  try {
+    // Actualizar stock
+    productos[i].stock -= cantidad;
+    const total = productos[i].precio * cantidad;
+
+    // Crear nueva venta
+    const nuevaVenta = {
+      producto: productos[i].nombre,
+      cantidad,
+      cliente: cliente.value,
+      pago: pago.value,
+      total,
+      fecha: new Date().toISOString()
+    };
+
+    console.log('Nueva venta a guardar:', nuevaVenta);
+    console.log('Productos antes de guardar:', productos);
+    console.log('Ventas antes de guardar:', ventas);
+
+    // Guardar cambios
+    ventas.push(nuevaVenta);
+    console.log('Ventas después de push:', ventas);
+
+    const okProductos = utils.setLS('productos', productos);
+    console.log('Resultado de guardar productos:', okProductos);
+
+    const okVentas = utils.setLS('ventas', ventas);
+    console.log('Resultado de guardar ventas:', okVentas);
+
+    if (!okProductos || !okVentas) {
+      throw new Error('Error al guardar los datos');
+    }
+
+    // Actualizar la interfaz
+    renderInventario();
+    renderVentas();
+    renderGraficoVentasPorProducto();
+    renderGraficoMetodoPago();
+    renderGraficoTendenciaVentas();
+    renderGraficoCategorias();
+    actualizarContadores();
+
+    // Mostrar resumen de la venta
+    document.getElementById('resumenVenta').innerHTML = `
+      <div class="alert alert-success slide-up">
+        <i class="fas fa-check-circle"></i>
+        <div>
+          <strong>Venta registrada exitosamente</strong>
+          <div class="venta-detalle">
+            <p>${cantidad}x ${productos[i].nombre}</p>
+            <p>Total: ${utils.formatCurrency(total)}</p>
+            <p>Cliente: ${cliente.value}</p>
+            <p>Método de pago: ${pago.value}</p>
+            <p>Fecha: ${utils.formatDate(nuevaVenta.fecha)}</p>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Limpiar el formulario y seleccionar el primer producto disponible
+    this.reset();
+    setTimeout(() => {
+      const select = document.getElementById('selectProducto');
+      if (select && select.options.length > 0) {
+        select.selectedIndex = 0;
+      }
+    }, 100);
+    mostrarMensaje('Venta registrada exitosamente', 'success');
+  } catch (error) {
+    console.error('Error al procesar la venta:', error);
+    mostrarMensaje('Error al procesar la venta. Por favor, intente nuevamente.', 'error');
+  }
+});
+
+    // Función para eliminar venta (sin confirmación)
+    function eliminarVenta(index) {
+        const ventas = utils.getLS('ventas');
+        const venta = ventas[index];
+        
+        if (!venta) return;
+
+        // Restaurar stock
+        const productos = utils.getLS('productos');
+        const productoIndex = productos.findIndex(p => p.nombre === venta.producto);
+        
+        if (productoIndex !== -1) {
+            productos[productoIndex].stock += venta.cantidad;
+            utils.setLS('productos', productos);
+        }
+
+        ventas.splice(index, 1);
+        utils.setLS('ventas', ventas);
+        
+  renderVentas();
+        renderInventario();
+        renderGraficoVentasPorProducto();
+        renderGraficoMetodoPago();
+        renderGraficoTendenciaVentas();
+        actualizarContadores();
+    }
+
+    // Función para eliminar producto (sin confirmación ni alertas)
+    function eliminarProducto(index) {
+        const productos = utils.getLS('productos');
+        const producto = productos[index];
+        
+        if (!producto) return;
+
+        // Verificar si hay ventas asociadas
+        const ventas = utils.getLS('ventas');
+        const ventasAsociadas = ventas.filter(v => v.producto === producto.nombre);
+        
+        if (ventasAsociadas.length > 0) {
+            mostrarMensaje('No se puede eliminar el producto porque tiene ventas asociadas', 'error');
+            return;
+        }
+
+        productos.splice(index, 1);
+        utils.setLS('productos', productos);
+        renderInventario();
+        renderSelect();
+        actualizarContadores();
+    }
+
+    // Función mejorada para editar producto
+    function editarProducto(index) {
+        const productos = utils.getLS('productos');
+        const producto = productos[index];
+        
+        if (!producto) {
+            mostrarMensaje('Producto no encontrado', 'error');
+            return;
+        }
+
+        // Crear modal de edición
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Editar Producto</h3>
+                    <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form id="formEditProducto" class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="editNombreProd">
+                            <i class="fas fa-tag"></i>
+                            Nombre del Producto
+                        </label>
+                        <input type="text" id="editNombreProd" value="${producto.nombre}" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="editCategoriaProd">
+                            <i class="fas fa-layer-group"></i>
+                            Categoría
+                        </label>
+                        <input type="text" id="editCategoriaProd" value="${producto.categoria}" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="editPrecioProd">
+                            <i class="fas fa-dollar-sign"></i>
+                            Precio
+                        </label>
+                        <input type="number" id="editPrecioProd" value="${producto.precio}" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="editStockProd">
+                            <i class="fas fa-box"></i>
+                            Stock
+                        </label>
+                        <input type="number" id="editStockProd" value="${producto.stock}" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="editDescripcionProd">
+                            <i class="fas fa-align-left"></i>
+                            Descripción
+                        </label>
+                        <textarea id="editDescripcionProd" rows="3">${producto.descripcion || ''}</textarea>
+                    </div>
+                    <div class="form-group button-align-right">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Guardar Cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+        setTimeout(() => modal.classList.add('active'), 10);
+
+        // Manejar el envío del formulario
+        document.getElementById('formEditProducto').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const nombre = document.getElementById('editNombreProd').value;
+            const categoria = document.getElementById('editCategoriaProd').value;
+            const precio = document.getElementById('editPrecioProd').value;
+            const stock = document.getElementById('editStockProd').value;
+            const descripcion = document.getElementById('editDescripcionProd').value;
+
+            // Validaciones
+            if (!validaciones.texto(nombre, 3, 50)) {
+                mostrarMensaje('El nombre debe tener entre 3 y 50 caracteres', 'error');
+                return;
+            }
+            if (!validaciones.texto(categoria, 2, 30)) {
+                mostrarMensaje('La categoría debe tener entre 2 y 30 caracteres', 'error');
+                return;
+            }
+            if (!validaciones.numero(precio, 0.01, 99999.99)) {
+                mostrarMensaje('El precio debe ser un número válido entre $0.01 y $99,999.99', 'error');
+                return;
+            }
+            if (!validaciones.numero(stock, 0, 9999)) {
+                mostrarMensaje('El stock debe ser un número válido entre 0 y 9,999', 'error');
+                return;
+            }
+
+            // Verificar si el nombre ya existe (excluyendo el producto actual)
+            if (productos.some((p, i) => i !== index && p.nombre.toLowerCase() === nombre.toLowerCase())) {
+                mostrarMensaje('Ya existe un producto con ese nombre', 'error');
+                return;
+            }
+
+            // Actualizar producto
+            productos[index] = {
+                nombre: utils.sanitizeInput(nombre),
+                categoria: utils.sanitizeInput(categoria),
+                precio: parseFloat(precio),
+                stock: parseInt(stock),
+                descripcion: utils.sanitizeInput(descripcion),
+                imagen: producto.imagen || '📦'
+            };
+
+            if (utils.setLS('productos', productos)) {
+                modal.remove();
+                renderInventario();
+                renderSelect();
+                mostrarMensaje('Producto actualizado exitosamente', 'success');
+                actualizarContadores();
+            }
+        });
+    }
+
+    // Función mejorada para renderizar encuestas
+    function renderEncuestas() {
+        const encuestas = utils.getLS('encuestas');
+        const resultados = document.getElementById('resultadosEncuesta');
+        
+        if (!resultados) {
+            console.error('No se encontró el elemento resultadosEncuesta');
+            return;
+        }
+
+        resultados.innerHTML = `
+            <div class="survey-section">
+                <div class="survey-header">
+                    <span class="survey-icon"><i class="fas fa-poll-h"></i></span>
+                    <h2>Encuesta de Satisfacción</h2>
+                    <p>Tu opinión es anónima y nos ayuda a mejorar cada día.</p>
+                </div>
+                
+                <div class="survey-rating">
+                    <div class="rating-buttons">
+                        <button class="rating-btn excelente" onclick="guardarEncuesta('Excelente')" aria-label="Excelente: Servicio sobresaliente y sin fallas">
+                            <i class="fas fa-star"></i>
+                            <span>Excelente</span>
+                            <small>Servicio sobresaliente</small>
+                        </button>
+                        <button class="rating-btn buena" onclick="guardarEncuesta('Buena')" aria-label="Buena: Servicio bueno, pero mejorable">
+                            <i class="fas fa-thumbs-up"></i>
+                            <span>Buena</span>
+                            <small>Servicio bueno</small>
+                        </button>
+                        <button class="rating-btn regular" onclick="guardarEncuesta('Regular')" aria-label="Regular: Servicio aceptable, pero con detalles">
+                            <i class="fas fa-face-meh"></i>
+                            <span>Regular</span>
+                            <small>Servicio aceptable</small>
+                        </button>
+                        <button class="rating-btn deficiente" onclick="guardarEncuesta('Deficiente')" aria-label="Deficiente: Servicio insatisfactorio o con problemas">
+                            <i class="fas fa-thumbs-down"></i>
+                            <span>Deficiente</span>
+                            <small>Servicio insatisfactorio</small>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="survey-thankyou" id="surveyThankYou">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>¡Gracias por tu calificación!</h3>
+                    <p>Tu opinión es muy valiosa para nosotros.</p>
+                </div>
+                
+                <hr class="survey-separator" />
+                
+                <div class="survey-results">
+                    <h3><i class="fas fa-chart-pie"></i> Resultados de la Encuesta</h3>
+                    <div class="chart-container">
+                        <canvas id="graficoEncuestas"></canvas>
+                    </div>
+                    <div class="survey-stats">
+                        <div class="stat-item">
+                            <span class="stat-value" id="totalEncuestas">0</span>
+                            <span class="stat-label">Total de encuestas</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="promedioEncuestas">0%</span>
+                            <span class="stat-label">Satisfacción promedio</span>
+                        </div>
+                    </div>
+                    <div class="survey-results-desc">
+                        Así opinan nuestros clientes en tiempo real.
+                    </div>
+                </div>
+                
+                <div class="survey-actions">
+                    <button class="btn-danger" onclick="eliminarEncuestas()">
+                        <i class="fas fa-trash"></i>
+                        Eliminar Todas las Encuestas
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    // Función para eliminar todas las encuestas
+    function eliminarEncuestas() {
+        if (!confirm('¿Está seguro de que desea eliminar todas las encuestas? Esta acción no se puede deshacer.')) {
+            return;
+        }
+
+        utils.setLS('encuestas', []);
+        renderGraficoEncuestas();
+        actualizarEstadisticas();
+        mostrarMensaje('Todas las encuestas han sido eliminadas', 'success');
+        
+        // Restaurar la vista de la encuesta
+        document.querySelector('.survey-thankyou').style.display = 'none';
+        document.querySelector('.survey-rating').style.display = 'block';
+    }
+
+    // Función para guardar encuesta
+    function guardarEncuesta(opinion) {
+        let encuestas = utils.getLS('encuestas');
+        if (!Array.isArray(encuestas)) encuestas = [];
+        encuestas.push(opinion);
+        utils.setLS('encuestas', encuestas);
+        document.querySelector('.survey-thankyou').style.display = 'block';
+        renderGraficoEncuestas();
+        actualizarEstadisticas();
+        mostrarMensaje('Encuesta registrada exitosamente', 'success');
+        setTimeout(() => {
+            document.querySelector('.survey-thankyou').style.display = 'none';
+        }, 3000);
+    }
+
+    // Función para actualizar estadísticas
+    function actualizarEstadisticas() {
+        const encuestas = utils.getLS('encuestas');
+        const totalEncuestas = encuestas.length;
+        
+        // Calcular satisfacción promedio
+        const pesos = {
+            'Excelente': 100,
+            'Buena': 75,
+            'Regular': 50,
+            'Deficiente': 25
+        };
+        
+        const promedio = encuestas.reduce((acc, opinion) => {
+            return acc + (pesos[opinion] || 0);
+        }, 0) / (totalEncuestas || 1);
+        
+        // Actualizar elementos en la interfaz
+        document.getElementById('totalEncuestas').textContent = totalEncuestas;
+        document.getElementById('promedioEncuestas').textContent = `${Math.round(promedio)}%`;
+    }
+
+    // Función mejorada para renderizar gráfica
+    function renderGraficoEncuestas() {
+        const encuestas = utils.getLS('encuestas');
+        const ctx = document.getElementById('graficoEncuestas');
+        if (!ctx) return;
+        // Limpiar gráfica previa si existe
+        if (window.graficoEncuestasInstance) {
+            window.graficoEncuestasInstance.destroy();
+        }
+        // Contar opiniones
+        const conteo = { 'Excelente': 0, 'Buena': 0, 'Regular': 0, 'Deficiente': 0 };
+        if (encuestas && encuestas.length) {
+            encuestas.forEach(opinion => {
+                if (conteo.hasOwnProperty(opinion)) conteo[opinion]++;
+            });
+        }
+        window.graficoEncuestasInstance = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(conteo),
+                datasets: [{
+                    data: Object.values(conteo),
+                    backgroundColor: [
+                        '#34c759', // Excelente
+                        '#007aff', // Buena
+                        '#ff9500', // Regular
+                        '#ff3b30'  // Deficiente
+                    ],
+                    borderWidth: 0,
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            font: {
+                                size: 14,
+                                weight: '600'
+                            }
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Distribución de Calificaciones',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        },
+                        padding: {
+                            top: 10,
+                            bottom: 20
+                        }
+                    }
+                },
+                cutout: '65%',
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                }
+            }
+        });
+        // Actualizar estadísticas
+        actualizarEstadisticas();
+    }
+
+    // Función para renderizar el select de productos
+    function renderSelect() {
+        console.log('Renderizando select de productos...');
+        const productos = utils.getLS('productos');
+        const select = document.getElementById('selectProducto');
+        
+        if (!select) {
+            console.error('No se encontró el elemento selectProducto');
+            return;
+        }
+        
+        if (!productos || !productos.length) {
+            select.innerHTML = '<option value="">No hay productos disponibles</option>';
+            return;
+        }
+
+        select.innerHTML = productos.map((p, i) => 
+            `<option value="${i}"${p.stock <= 0 ? ' disabled' : ''}>${p.nombre} - Stock: ${p.stock} - ${utils.formatCurrency(p.precio)}</option>`
+        ).join('');
+    }
+
+    // Función de navegación
+    function mostrarSeccion(id) {
+        console.log(`Mostrando sección: ${id}`);
+        document.querySelectorAll('.seccion').forEach(s => s.classList.add('oculto'));
+        const seccion = document.getElementById(id);
+        if (!seccion) {
+            console.error(`No se encontró la sección ${id}`);
+            return;
+        }
+        seccion.classList.remove('oculto');
+        
+        // Actualizar navegación
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.remove('active');
+            if (item.getAttribute('onclick').includes(id)) {
+                item.classList.add('active');
+            }
+        });
+        
+        switch(id) {
+            case 'inventario':
+renderInventario();
+                break;
+            case 'ventas':
+                renderSelect();
+  renderVentas();
+                break;
+            case 'reportes':
+                renderGraficoVentasPorProducto();
+                renderGraficoMetodoPago();
+                renderGraficoTendenciaVentas();
+                renderGraficoCategorias();
+                break;
+            case 'encuestas':
+                renderEncuestas();
+                break;
+        }
+    }
+
+    // Función para actualizar contadores
+    function actualizarContadores() {
+        const productos = utils.getLS('productos');
+        const ventas = utils.getLS('ventas');
+        
+        // Actualizar contador de productos
+        const totalProductos = productos.length;
+        const stockBajo = productos.filter(p => p.stock < 10).length;
+        
+        // Actualizar contador de ventas
+        const totalVentas = ventas.length;
+        const ventasHoy = ventas.filter(v => {
+            const fechaVenta = new Date(v.fecha);
+            const hoy = new Date();
+            return fechaVenta.toDateString() === hoy.toDateString();
+        }).length;
+        
+        // Actualizar contador de ingresos
+        const ingresosTotales = ventas.reduce((sum, v) => sum + v.total, 0);
+        const ingresosHoy = ventas
+            .filter(v => new Date(v.fecha).toDateString() === new Date().toDateString())
+            .reduce((sum, v) => sum + v.total, 0);
+        
+        // Actualizar la interfaz con los contadores
+        document.querySelectorAll('.counter').forEach(counter => {
+            const tipo = counter.dataset.type;
+            switch(tipo) {
+                case 'productos':
+                    counter.innerHTML = `
+                        <div class="counter-value">${totalProductos}</div>
+                        <div class="counter-label">Productos</div>
+                        ${stockBajo > 0 ? `<div class="counter-warning">${stockBajo} con stock bajo</div>` : ''}
+                    `;
+                    break;
+                case 'ventas':
+                    counter.innerHTML = `
+                        <div class="counter-value">${totalVentas}</div>
+                        <div class="counter-label">Ventas Totales</div>
+                        <div class="counter-sub">${ventasHoy} hoy</div>
+                    `;
+                    break;
+                case 'ingresos':
+                    counter.innerHTML = `
+                        <div class="counter-value">${utils.formatCurrency(ingresosTotales)}</div>
+                        <div class="counter-label">Ingresos Totales</div>
+                        <div class="counter-sub">${utils.formatCurrency(ingresosHoy)} hoy</div>
+                    `;
+                    break;
+            }
+        });
+    }
+
+    // GRÁFICAS
+    function renderGraficoVentasPorProducto() {
+        const ventas = utils.getLS('ventas');
+        if (!ventas.length) return;
+        const resumen = {};
+        ventas.forEach(v => {
+          resumen[v.producto] = (resumen[v.producto] || 0) + v.total;
+        });
+        const ctx = document.getElementById('graficoVentasPorProducto');
+        if (!ctx) return;
+        // Destruir instancia previa si existe
+        if (window.graficoVentasPorProductoInstance) {
+          window.graficoVentasPorProductoInstance.destroy();
+        }
+        window.graficoVentasPorProductoInstance = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: Object.keys(resumen),
+            datasets: [{
+              label: 'Total Vendido ($)',
+              data: Object.values(resumen),
+              backgroundColor: '#007aff',
+              borderRadius: 6,
+              barThickness: 20
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false
+              },
+              title: {
+                display: true,
+                text: 'Ventas por Producto',
+                font: {
+                  size: 14,
+                  weight: 'bold'
+                },
+                padding: {
+                  top: 5,
+                  bottom: 10
+                }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: 'Total Vendido ($)',
+                  font: {
+                    size: 12,
+                    weight: 'bold'
+                  }
+                },
+                grid: {
+                  color: 'rgba(0,0,0,0.1)'
+                }
+              },
+              x: {
+                grid: {
+                  display: false
+                },
+                ticks: {
+                  maxRotation: 45,
+                  minRotation: 45
+                }
+              }
+            }
+          }
+        });
+    }
+
+    function renderGraficoMetodoPago() {
+        const ventas = utils.getLS('ventas');
+        if (!ventas.length) return;
+        const resumen = {};
+        ventas.forEach(v => {
+            resumen[v.pago] = (resumen[v.pago] || 0) + v.total;
+        });
+        const ctx = document.getElementById('graficoMetodoPago');
+        if (!ctx) return;
+        // Destruir instancia previa si existe
+        if (window.graficoMetodoPagoInstance) {
+            window.graficoMetodoPagoInstance.destroy();
+        }
+        window.graficoMetodoPagoInstance = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(resumen),
+                datasets: [{
+                    data: Object.values(resumen),
+                    backgroundColor: ['#007aff', '#34c759', '#ff9500', '#af52de'],
+                    borderWidth: 0,
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 10,
+                            font: {
+                                size: 11
+                            }
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Métodos de Pago',
+                        font: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        padding: {
+                            top: 5,
+                            bottom: 10
+                        }
+                    }
+                },
+                cutout: '65%'
+            }
+        });
+    }
+
+    function renderGraficoTendenciaVentas() {
+        const ventas = utils.getLS('ventas');
+        if (!ventas.length) return;
+        const resumen = {};
+        ventas.forEach(v => {
+            const fecha = new Date(v.fecha).toLocaleDateString();
+            resumen[fecha] = (resumen[fecha] || 0) + v.total;
+        });
+        const ctx = document.getElementById('graficoTendenciaVentas');
+        if (!ctx) return;
+        // Destruir instancia previa si existe
+        if (window.graficoTendenciaVentasInstance) {
+            window.graficoTendenciaVentasInstance.destroy();
+        }
+        window.graficoTendenciaVentasInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: Object.keys(resumen),
+                datasets: [{
+                    label: 'Ventas por Día',
+                    data: Object.values(resumen),
+                    borderColor: '#007aff',
+                    backgroundColor: 'rgba(0,122,255,0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 3,
+                    pointHoverRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'Tendencia de Ventas',
+                        font: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        padding: {
+                            top: 5,
+                            bottom: 10
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Total Vendido ($)',
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(0,0,0,0.1)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            maxRotation: 45,
+                            minRotation: 45
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function renderGraficoCategorias() {
+        const ventas = utils.getLS('ventas');
+        const productos = utils.getLS('productos');
+        if (!Array.isArray(ventas) || !Array.isArray(productos) || ventas.length === 0) return;
+        
+        const resumen = {};
+        ventas.forEach(v => {
+            const producto = productos.find(p => p.nombre === v.producto);
+            if (producto && producto.categoria) {
+                resumen[producto.categoria] = (resumen[producto.categoria] || 0) + v.cantidad;
+            }
+        });
+        
+        const ctx = document.getElementById('graficoCategorias');
+        if (!ctx) return;
+        
+        // Destruir instancia previa si existe
+        if (window.graficoCategoriasInstance) {
+            window.graficoCategoriasInstance.destroy();
+        }
+        
+        window.graficoCategoriasInstance = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: Object.keys(resumen),
+                datasets: [{
+                    data: Object.values(resumen),
+                    backgroundColor: [
+                        '#34c759',
+                        '#007aff',
+                        '#ff9500',
+                        '#ff3b30',
+                        '#5856d6',
+                        '#ff2d55'
+                    ],
+                    borderWidth: 0,
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            font: {
+                                size: 14,
+                                weight: '600'
+                            }
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Ventas por Categoría',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        },
+                        padding: {
+                            top: 10,
+                            bottom: 20
+                        }
+                    }
+                },
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                }
+            }
+        });
+    }
+
+    // Mostrar mensaje visual de agradecimiento tras votar
+    function mostrarMensajeAgradecimiento() {
+      const thankYou = document.getElementById('surveyThankYou');
+      if (thankYou) {
+        thankYou.style.display = 'block';
+        thankYou.style.opacity = '1';
+        setTimeout(() => { thankYou.style.opacity = '0'; thankYou.style.display = 'none'; }, 2200);
+      }
+    }
+
+    // Ocultar mensaje de agradecimiento al cambiar de sección
+    function ocultarMensajeAgradecimiento() {
+        const thankYou = document.getElementById('surveyThankYou');
+        if (thankYou) {
+            thankYou.style.display = 'none';
+            thankYou.style.opacity = '0';
+        }
+    }
+
+    // Modificar mostrarSeccion para actualizar la gráfica y ocultar el mensaje de agradecimiento
+    function mostrarSeccion(seccion) {
+        document.querySelectorAll('.seccion').forEach(sec => sec.classList.add('oculto'));
+        const s = document.getElementById(seccion);
+        if (s) {
+            s.classList.remove('oculto');
+            if (seccion === 'encuestas') {
+                renderGraficoEncuestas();
+                ocultarMensajeAgradecimiento();
+            }
+        }
+    }
+
+    // Event listener para el contador de caracteres
+    document.querySelector('.survey-comment textarea')?.addEventListener('input', function() {
+        const maxLength = this.getAttribute('maxlength');
+        const currentLength = this.value.length;
+        this.nextElementSibling.textContent = `${currentLength}/${maxLength}`;
+    });
+
+    // Mostrar sección de comentarios después de calificar
+    document.querySelectorAll('.rating-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelector('.survey-comment').style.display = 'block';
+        });
+    });
+
+    // Función para exportar ventas a Excel
+    function exportarVentasExcel() {
+      const ventas = utils.getLS('ventas');
+      if (!ventas.length) {
+        mostrarMensaje('No hay ventas para exportar.', 'warning');
+        return;
+      }
+      // Formatear fechas
+      const ventasFormateadas = ventas.map(v => ({
+        ...v,
+        fecha: new Date(v.fecha).toLocaleString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true })
+      }));
+      const ws = XLSX.utils.json_to_sheet(ventasFormateadas);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Ventas');
+      XLSX.writeFile(wb, 'ventas.xlsx');
+    }
+
+    // Función para exportar ventas a PDF
+    function exportarVentasPDF() {
+      const ventas = utils.getLS('ventas');
+      if (!ventas.length) {
+        mostrarMensaje('No hay ventas para exportar.', 'warning');
+        return;
+      }
+      // Formatear fechas
+      const ventasFormateadas = ventas.map(v => ({
+        ...v,
+        fecha: new Date(v.fecha).toLocaleString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true })
+      }));
+      const doc = new jspdf.jsPDF();
+      const columns = [
+        { header: 'Cliente', dataKey: 'cliente' },
+        { header: 'Producto', dataKey: 'producto' },
+        { header: 'Cantidad', dataKey: 'cantidad' },
+        { header: 'Método de Pago', dataKey: 'pago' },
+        { header: 'Total', dataKey: 'total' },
+        { header: 'Fecha', dataKey: 'fecha' }
+      ];
+      doc.text('Reporte de Ventas', 14, 16);
+      doc.autoTable({
+        columns,
+        body: ventasFormateadas,
+        startY: 22,
+        styles: { fontSize: 9 },
+        headStyles: { fillColor: [37, 99, 235] }
+      });
+      doc.save('ventas.pdf');
+    }
+
+    function actualizarFechaHoraTopbar() {
+      const el = document.getElementById('topbar-datetime');
+      if (!el) return;
+      const now = new Date();
+      const opciones = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+      el.textContent = now.toLocaleString('es-MX', opciones);
+    }
+    setInterval(actualizarFechaHoraTopbar, 1000);
+    document.addEventListener('DOMContentLoaded', actualizarFechaHoraTopbar);
+
+    function mostrarModalAyuda(e) {
+      e.preventDefault();
+      if (document.getElementById('modal-ayuda')) return;
+      const modal = document.createElement('div');
+      modal.id = 'modal-ayuda';
+      modal.style.position = 'fixed';
+      modal.style.top = '0';
+      modal.style.left = '0';
+      modal.style.width = '100vw';
+      modal.style.height = '100vh';
+      modal.style.background = 'rgba(0,0,0,0.35)';
+      modal.style.display = 'flex';
+      modal.style.alignItems = 'center';
+      modal.style.justifyContent = 'center';
+      modal.style.zIndex = '9999';
+      modal.innerHTML = `
+        <div style="background:white;max-width:350px;width:90vw;padding:2rem 1.5rem;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.18);text-align:center;position:relative;">
+          <button onclick="document.getElementById('modal-ayuda').remove()" style="position:absolute;top:12px;right:12px;background:none;border:none;font-size:1.3rem;color:#888;cursor:pointer;"><i class='fas fa-times'></i></button>
+          <div style="font-size:2.2rem;color:#3b82f6;margin-bottom:0.5rem;"><i class="fas fa-question-circle"></i></div>
+          <h2 style="margin:0 0 0.5rem 0;font-size:1.2rem;color:#2563eb;">¿Necesitas ayuda?</h2>
+          <p style="color:#374151;font-size:1rem;margin-bottom:1.2rem;">Para soporte técnico o dudas, escríbenos a <a href="mailto:soporte@serveflow.com" style="color:#2563eb;text-decoration:underline;">soporte@serveflow.com</a>.<br>¡Estamos para ayudarte!</p>
+          <button onclick="document.getElementById('modal-ayuda').remove()" style="background:#2563eb;color:white;padding:0.5rem 1.2rem;border:none;border-radius:8px;font-size:1rem;cursor:pointer;">Cerrar</button>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+</script>
+</body>
+</html>
