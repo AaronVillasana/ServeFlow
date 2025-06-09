@@ -1510,12 +1510,35 @@
 
     // Actualizar la función inicializarSistema para que inicialice la gráfica
     function inicializarSistema() {
-        // ... código existente ...
+        console.log('Iniciando sistema...');
         
+        // Inicializar productos si no existen
+        if (!localStorage.getItem('productos')) {
+            console.log('Inicializando productos vacíos...');
+            utils.setLS('productos', []);
+        }
+
+        // Inicializar ventas si no existen
+        if (!localStorage.getItem('ventas')) {
+            console.log('Inicializando ventas...');
+            utils.setLS('ventas', []);
+        }
+
+        // Inicializar encuestas si no existen
+        if (!localStorage.getItem('encuestas')) {
+            console.log('Inicializando encuestas...');
+            utils.setLS('encuestas', []);
+        }
+
+        // Renderizar interfaz inicial
+        console.log('Renderizando interfaz...');
+  renderInventario();
+  renderVentas();
+        renderSelect();
+        actualizarContadores();
+
         // Inicializar gráfica de encuestas
         renderGraficoEncuestas();
-        
-        // ... resto del código existente ...
     }
 
     .survey-results {
@@ -2451,42 +2474,8 @@
         
         // Inicializar productos si no existen
         if (!localStorage.getItem('productos')) {
-            console.log('Inicializando productos...');
-            const productosIniciales = [
-                { 
-                    nombre: 'Café Americano', 
-                    categoria: 'Bebidas', 
-                    precio: 35, 
-                    stock: 100,
-                    descripcion: 'Café negro tradicional',
-                    imagen: '☕'
-                },
-                { 
-                    nombre: 'Café Latte', 
-                    categoria: 'Bebidas', 
-                    precio: 45, 
-                    stock: 100,
-                    descripcion: 'Café con leche cremosa',
-                    imagen: '🥛'
-                },
-                { 
-                    nombre: 'Croissant', 
-                    categoria: 'Panadería', 
-                    precio: 25, 
-                    stock: 50,
-                    descripcion: 'Panadería francesa tradicional',
-                    imagen: '🥐'
-                },
-                { 
-                    nombre: 'Sandwich', 
-                    categoria: 'Alimentos', 
-                    precio: 55, 
-                    stock: 30,
-                    descripcion: 'Sándwich gourmet',
-                    imagen: '🥪'
-                }
-            ];
-            utils.setLS('productos', productosIniciales);
+            console.log('Inicializando productos vacíos...');
+            utils.setLS('productos', []);
         }
 
         // Inicializar ventas si no existen
@@ -2797,6 +2786,7 @@ function renderInventario() {
     // Crear nueva venta
     const nuevaVenta = {
       producto: productos[i].nombre,
+      categoria: productos[i].categoria, // Guardar la categoría en el momento de la venta
       cantidad,
       cliente: cliente.value,
       pago: pago.value,
@@ -3562,75 +3552,68 @@ renderInventario();
 
     function renderGraficoCategorias() {
         const ventas = utils.getLS('ventas');
-        const productos = utils.getLS('productos');
-        if (!Array.isArray(ventas) || !Array.isArray(productos) || ventas.length === 0) return;
-        
+        if (!Array.isArray(ventas) || ventas.length === 0) return;
         const resumen = {};
         ventas.forEach(v => {
-            const producto = productos.find(p => p.nombre === v.producto);
-            if (producto && producto.categoria) {
-                resumen[producto.categoria] = (resumen[producto.categoria] || 0) + v.cantidad;
-            }
+          if (v.categoria) {
+            resumen[v.categoria] = (resumen[v.categoria] || 0) + v.cantidad;
+          }
         });
-        
         const ctx = document.getElementById('graficoCategorias');
         if (!ctx) return;
-        
-        // Destruir instancia previa si existe
         if (window.graficoCategoriasInstance) {
-            window.graficoCategoriasInstance.destroy();
+          window.graficoCategoriasInstance.destroy();
         }
-        
         window.graficoCategoriasInstance = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: Object.keys(resumen),
-                datasets: [{
-                    data: Object.values(resumen),
-                    backgroundColor: [
-                        '#34c759',
-                        '#007aff',
-                        '#ff9500',
-                        '#ff3b30',
-                        '#5856d6',
-                        '#ff2d55'
-                    ],
-                    borderWidth: 0,
-                    borderRadius: 5
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            padding: 20,
-                            font: {
-                                size: 14,
-                                weight: '600'
-                            }
-                        }
-                    },
-                    title: {
-                        display: true,
-                        text: 'Ventas por Categoría',
-                        font: {
-                            size: 16,
-                            weight: 'bold'
-                        },
-                        padding: {
-                            top: 10,
-                            bottom: 20
-                        }
-                    }
-                },
-                animation: {
-                    animateScale: true,
-                    animateRotate: true
+          type: 'pie',
+          data: {
+            labels: Object.keys(resumen),
+            datasets: [{
+              data: Object.values(resumen),
+              backgroundColor: [
+                '#34c759',
+                '#007aff',
+                '#ff9500',
+                '#ff3b30',
+                '#5856d6',
+                '#ff2d55'
+              ],
+              borderWidth: 0,
+              borderRadius: 5
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  padding: 20,
+                  font: {
+                    size: 14,
+                    weight: '600'
+                  }
                 }
+              },
+              title: {
+                display: true,
+                text: 'Ventas por Categoría',
+                font: {
+                  size: 16,
+                  weight: 'bold'
+                },
+                padding: {
+                  top: 10,
+                  bottom: 20
+                }
+              }
+            },
+            animation: {
+              animateScale: true,
+              animateRotate: true
             }
+          }
         });
     }
 
